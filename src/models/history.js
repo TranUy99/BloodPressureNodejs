@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   History.init({
-    id: DataTypes.INTEGER,
+  
     userId: DataTypes.INTEGER,         
     doctorId: DataTypes.INTEGER,
     description: DataTypes.TEXT, 

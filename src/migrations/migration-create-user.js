@@ -13,7 +13,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      passWord: {
+      password: {
         type: Sequelize.STRING
       },
       firstName: {
@@ -28,8 +28,13 @@ module.exports = {
       gender: {
         type: Sequelize.INTEGER
       },
-      rodeId: {
-        type: Sequelize.STRING
+    
+      phoneNumber: {
+        type: Sequelize.INTEGER
+      },
+      image: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

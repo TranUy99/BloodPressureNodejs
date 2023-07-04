@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
     }
   }
-  specialty.init({
-    id: DataTypes.INTEGER,
+  Specialty.init({
+    
     description: DataTypes.TEXT,         
     image: DataTypes.STRING,
     

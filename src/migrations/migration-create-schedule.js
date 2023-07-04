@@ -25,7 +25,6 @@ module.exports = {
       doctorId: {
         type: Sequelize.INTEGER
       },
-      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

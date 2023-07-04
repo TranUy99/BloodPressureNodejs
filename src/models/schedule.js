@@ -8,8 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
     }
   }
-  User.init({
-    id: DataTypes.INTEGER,
+  Schedule.init({
     currentNumber: DataTypes.INTEGER,         
     maxNumber: DataTypes.INTEGER,
     date: DataTypes.DATE,
