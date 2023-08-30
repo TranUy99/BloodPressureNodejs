@@ -36,49 +36,90 @@ let register = async (email, password, lastName, firstName) => {
 };
 
 
-let handleUserLogin = (email, password) => {
-  return new Promise(async (resolve, reject) => {
-      try {
-          let userData = {};
-          let isExist = await checkUserEmail(email);
-          if (isExist) {
-              //user already exist
-              let user = await db.User.findOne({
-                  attributes: ['email', 'password'],
-                  where: { email: email },
-                  raw: true,
+let handleUserLogin = async (email, password) => {
+  try {
+    let userData = {};
+    let isExist = await checkUserEmail(email);
+    if (isExist) {
+      // User already exists
+      let user = await db.User.findOne({
+        attributes: ['id', 'email', 'password'], // Include 'id' in the attributes
+        where: { email: email },
+        raw: true,
+      });
+      if (user) {
+        let check = await bcryptjs.compare(password, user.password);
+        if (check) {
+          userData.errCode = 0;
+          userData.errMessage = 'OK';
 
-              });
-              if (user) {
-                  
-                  let check = await bcryptjs.compare(password, user.password);
-                  if (check) {
-                    userData.errCode = 0;
-                    userData.errMessage = 'OK';
-
-                    delete user.password;
-                    userData.user = user;
-                }
-                else {
-                    userData.errCode = 3;
-                    userData.errMessage = 'Wrong password';
-                }
-              } else {
-                  userData.errCode = 2;
-                  userData.errMessage = `User not found`;
-              }
-
-          } else {
-              //return error
-              userData.errCode = 1;
-              userData.errMessage = `Your's Email isn't exist in our system, plz try other email`
-          }
-          resolve(userData)
-      } catch (e) {
-          reject(e);
+          delete user.password;
+          userData.user = user;
+        } else {
+          userData.errCode = 3;
+          userData.errMessage = 'Wrong password';
+        }
+      } else {
+        userData.errCode = 2;
+        userData.errMessage = `User not found`;
       }
-  })
-}
+    } else {
+      // Return error
+      userData.errCode = 1;
+      userData.errMessage = `Your email isn't exist in our system, please try another email`;
+    }
+    return userData;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+let getUserById = async (userId, token) => {
+  try {
+    if (userId != token) {
+      return { success: 0 };
+    }
+
+    let user = await db.User.findOne({
+      where: { id: userId },
+      raw: true,
+    });
+
+    return user;
+  } catch (e) {
+    throw e;
+  }
+};
+
+let updateUserData = async (userId,token,data) => {
+
+  try {
+    if (userId != token) {
+      return { success: 0 };
+    } else {
+      let user = await db.User.findOne({
+        where: { id: userId },
+        raw: false,
+      });
+
+      if (user) {
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
+
+        await user.save();
+                let allUsers = await db.User.findOne({
+                  where: { id: userId },
+                  raw: true,
+                });
+                return allUsers;
+      }
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 let checkUserEmail = (userEmail) => {
   return new Promise(async (resolve, reject) => {
       try {
@@ -101,4 +142,6 @@ let checkUserEmail = (userEmail) => {
 module.exports = {
   register: register,
   handleUserLogin:handleUserLogin,
+  getUserById: getUserById,
+  updateUserData:updateUserData
 };

@@ -32,10 +32,6 @@ module.exports = {
       phoneNumber: {
         type: Sequelize.INTEGER
       },
-      image: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
