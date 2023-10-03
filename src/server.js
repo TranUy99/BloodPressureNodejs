@@ -3,6 +3,10 @@ import bodyParser from "body-parser";
 import configViewEngine from "./config/view_engnine";
 import auth from './route/authRoute';
 import connectDB  from './config/connectDB';
+import bloodPressureRouter from "./route/bloodPressureRoute";
+import doctorRouter from "./route/doctorRoute";
+import scheduleRouter from "./route/scheduleRoute";
+import bookingRouter from "./route/bookingRoute";
 require('dotenv').config();
 
 let app = express();
@@ -15,6 +19,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 configViewEngine(app);
 
 auth(app);
+bloodPressureRouter(app);
+doctorRouter(app);
+scheduleRouter(app);
+bookingRouter(app);
 
 connectDB();
 let port = process.env.PORT || 8000;
