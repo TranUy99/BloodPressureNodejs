@@ -3,9 +3,9 @@ const { sign } = require("jsonwebtoken");
 
 //register
 let register = async (req, res) => {
-     let { email, firstName, lastName, password } = req.body;
+     let { email, fullName, role, password } = req.body;
    
-     if (!email || !password || !firstName || !lastName) {
+     if (!email || !password || !fullName || !role) {
        return res.status(500).json({
          errCode: 1,
          message: 'Missing inputs parameter!'
@@ -13,7 +13,7 @@ let register = async (req, res) => {
      }
    
      try {
-       let userRegister = await userService.register(email, password, lastName, firstName);
+       let userRegister = await userService.register(email, password, fullName, role);
        return res.status(200).json({
          errCode: userRegister.errCode,
          message: userRegister.errMessage,
@@ -44,14 +44,14 @@ let register = async (req, res) => {
     if (userData && userData.user && userData.user.id) {
       const userId = userData.user.id;
       const token = sign({ userId:userId }, process.env.JWT_KEY, {
-        expiresIn: "1h"
+        expiresIn: "10h"
       });
   
       return res.status(200).json({
         errCode: userData.errCode,
         message: userData.errMessage,
         token,
-        user: userId
+        idUser: userId
       });
     } else {
       return res.status(500).json({
@@ -60,7 +60,7 @@ let register = async (req, res) => {
       });
     }
   };
-  const excludeFields = (object, excludedFields) => {
+  let excludeFields = (object, excludedFields) => {
     const filteredObject = {};
     for (const key in object) {
       if (!excludedFields.includes(key)) {
@@ -70,6 +70,7 @@ let register = async (req, res) => {
     return filteredObject;
   };
   
+  //getUserByUserId
   let getUserByUserId = async (req, res) => {
     let userId = req.params.id;
     let token = req.decoded.userId;
@@ -157,4 +158,5 @@ module.exports = {
     handleLogin: handleLogin,
     getUserByUserId: getUserByUserId,
     updateUserData: updateUserData,
+    excludeFields: excludeFields,
 }
