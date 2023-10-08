@@ -3,9 +3,9 @@ const { sign } = require("jsonwebtoken");
 
 //register
 let register = async (req, res) => {
-     let { email, fullName, role, password } = req.body;
+     let { email, fullName, password } = req.body;
    
-     if (!email || !password || !fullName || !role) {
+     if (!email || !password || !fullName ) {
        return res.status(500).json({
          errCode: 1,
          message: 'Missing inputs parameter!'
@@ -13,7 +13,7 @@ let register = async (req, res) => {
      }
    
      try {
-       let userRegister = await userService.register(email, password, fullName, role);
+       let userRegister = await userService.register(email, password, fullName);
        return res.status(200).json({
          errCode: userRegister.errCode,
          message: userRegister.errMessage,

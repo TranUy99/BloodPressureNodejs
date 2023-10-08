@@ -3,7 +3,7 @@ const bcryptjs = require("bcryptjs");
 
 
 
-let register = async (email, password, fullName, role) => {
+let register = async (email, password, fullName) => {
   try {
     const existingUser = await db.User.findOne({
       where: { email: email }
@@ -23,7 +23,7 @@ let register = async (email, password, fullName, role) => {
       email,
       password: hashedPassword,
       fullName,
-      role
+
     });
     return {
       errCode: 0,
