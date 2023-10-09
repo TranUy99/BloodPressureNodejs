@@ -25,7 +25,7 @@ scheduleRouter(app);
 bookingRouter(app);
 
 connectDB();
-let port = process.env.PORT || 8000;
+let port = process.env.PORT || 8080;
 //Port === undefined => port = 6969
 
 app.listen(port, () => {
