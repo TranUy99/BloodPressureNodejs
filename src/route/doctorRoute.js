@@ -1,5 +1,5 @@
-import express from "express";
-import doctorController from "../controllers/doctorController";
+const express =require ("express");
+const doctorController =require ("../controllers/doctorController");
 const { checkToken } = require("../token/token");
 let router = express.Router();
 

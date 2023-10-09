@@ -1,5 +1,5 @@
-import db  from '../models/index'
-import schedule from '../models/schedule';
+const db  = require( '../models/index')
+// import schedule from '../models/schedule';
 
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh'); // Đặt múi giờ mặc định là múi giờ của bạn

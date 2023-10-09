@@ -1,4 +1,4 @@
-import scheduleService from '../services/scheduleService';
+const scheduleService = require('../services/scheduleService');
 
 const userController = require('./userController');
 //create BloodPressure

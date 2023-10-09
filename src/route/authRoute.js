@@ -1,5 +1,5 @@
-import express from "express";
-import userController from "../controllers/userController";
+const express = require ("express");
+const userController  = require ("../controllers/userController");
 const { checkToken } = require("../token/token");
 let router = express.Router();
 

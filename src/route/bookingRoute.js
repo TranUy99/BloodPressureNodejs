@@ -1,5 +1,5 @@
-import express from "express";
-import bookingController from "../controllers/bookingController";
+const express = require( "express");
+const bookingController = require ("../controllers/bookingController");
 const { checkToken } = require("../token/token");
 let router = express.Router();
 

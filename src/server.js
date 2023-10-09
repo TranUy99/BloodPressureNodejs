@@ -1,12 +1,12 @@
-import express from "express";
-import bodyParser from "body-parser";
-import configViewEngine from "./config/view_engnine";
-import auth from './route/authRoute';
-import connectDB  from './config/connectDB';
-import bloodPressureRouter from "./route/bloodPressureRoute";
-import doctorRouter from "./route/doctorRoute";
-import scheduleRouter from "./route/scheduleRoute";
-import bookingRouter from "./route/bookingRoute";
+const express = require ("express");
+const bodyParser = require  ("body-parser");
+const configViewEngine = require  ("./config/view_engnine");
+const auth = require  ('./route/authRoute');
+const connectDB  = require  ('./config/connectDB');
+const bloodPressureRouter = require  ("./route/bloodPressureRoute");
+const doctorRouter = require  ("./route/doctorRoute");
+const scheduleRouter = require  ("./route/scheduleRoute");
+const bookingRouter = require  ("./route/bookingRoute");
 require('dotenv').config();
 
 let app = express();

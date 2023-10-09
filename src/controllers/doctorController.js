@@ -1,4 +1,4 @@
-import doctorService from '../services/doctorService';
+const doctorService = require('../services/doctorService');
 const { sign } = require("jsonwebtoken");
 const userController = require('./userController');
 //register

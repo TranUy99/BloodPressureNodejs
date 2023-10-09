@@ -1,5 +1,5 @@
-import express from "express";
-import bloodPressureController from "../controllers/bloodPressureController";
+const express = require("express");
+const bloodPressureController = require ("../controllers/bloodPressureController");
 const { checkToken } = require("../token/token");
 let router = express.Router();
 

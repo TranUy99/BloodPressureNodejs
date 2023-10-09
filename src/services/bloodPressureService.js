@@ -1,4 +1,4 @@
-import db  from '../models/index'
+const db  = require( '../models/index')
 
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh'); // Đặt múi giờ mặc định là múi giờ của bạn

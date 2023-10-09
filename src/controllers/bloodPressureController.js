@@ -1,4 +1,4 @@
-import bloodPressureService from '../services/bloodPressureService';
+const bloodPressureService = require('../services/bloodPressureService');
 
 const userController = require('./userController');
 //create BloodPressure

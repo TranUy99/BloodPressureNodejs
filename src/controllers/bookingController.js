@@ -1,5 +1,5 @@
 
-import bookingService from '../services/bookingService';
+const bookingService = require('../services/bookingService');
 
 const userController = require('./userController');
 //create BloodPressure
