@@ -74,7 +74,7 @@ let getBloodPressureByUserId = async (req, res) => {
       });
     }
 
-    let result = await bloodPressureService.getBloodPressureById(userId, token);
+    let result = await bloodPressureService.getBloodPressureByUserId(userId, token);
     if (result.errCode == 0) {
       const excludedFields = ['password', 'createdAt', 'updatedAt', 'userId'];
       const filteredUser = userController.excludeFields(result.user, excludedFields);
@@ -129,7 +129,7 @@ let getBloodPressureByUserIdReverse = async (req, res) => {
       });
     }
 
-    let result = await bloodPressureService.getBloodPressureById(userId, token);
+    let result = await bloodPressureService.getBloodPressureByUserId(userId, token);
     if (result.errCode === 0) {
       const excludedFields = ['password', 'createdAt', 'updatedAt', 'userId'];
       const filteredUser = userController.excludeFields(result.user, excludedFields);
@@ -179,9 +179,49 @@ let getBloodPressureByUserIdReverse = async (req, res) => {
     });
   }
 };
+let getBloodById = async (req,res) => {
+  let bloodId = req.params.id;
+  
+  try {
+  //   if (doctorId != token) {
+  //     return res.status(403).json({
+  //       errCode: 403,
+  //       message: "Access denied. You are not authorized to view this user's data."
+  //     });
+  //   }
+
+    let result = await bloodPressureService.getBloodById(bloodId,);
+    if (result.errCode == 0) {
+      const excludedFields = ['createdAt', 'updatedAt',];
+    
+      const filteredSchedule = result.schedule.map(item => {
+        return userController.excludeFields(item, excludedFields);
+      });
+
+      return res.status(200).json({
+        errCode: 0,
+        message: 'OK',
+       
+        schedule: filteredSchedule,
+      });
+    } else {
+      return res.status(400).json({
+        errCode: 400,
+        message: 'Bad request'
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      errCode: 4,
+      message: 'Failed server'
+    });
+  }
+};
 
 module.exports = {
      createBloodPressure: createBloodPressure,
      getBloodPressureByUserId: getBloodPressureByUserId,
      getBloodPressureByUserIdReverse: getBloodPressureByUserIdReverse,
+     getBloodById: getBloodById,
  }

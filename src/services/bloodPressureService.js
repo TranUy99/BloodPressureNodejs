@@ -50,7 +50,7 @@ let createBloodPressure = async (userId, token, SystolicPressure, DiastolicPress
      }
    };
 
-   let getBloodPressureById = async (userId, token) => {
+   let getBloodPressureByUserId = async (userId, token) => {
     try {
       if (userId != token) {
         return { errCode: 403, message: "Access denied. You are not authorized to view this user's data." };
@@ -75,8 +75,30 @@ let createBloodPressure = async (userId, token, SystolicPressure, DiastolicPress
       throw e;
     }
   };
+
+  let getBloodById = async (bloodId, ) => {
+    try {
+      let blood = await db.BloodPressure.findOne({
+        where: { id: bloodId },
+        raw: true,
+      });
   
+      if (!blood) {
+        return { errCode: 404, message: "Blood not found." };
+      }
+  
+      let schedule = await db.BloodPressure.findAll({
+        where: { id: bloodId},
+        raw: true,
+      });
+  
+      return { errCode: 0, message: "OK", schedule: schedule };
+    } catch (e) {
+      throw e;
+    }
+  };
 module.exports = {
      createBloodPressure: createBloodPressure,  
-     getBloodPressureById: getBloodPressureById,
+     getBloodPressureByUserId: getBloodPressureByUserId,
+     getBloodById: getBloodById,
 };
