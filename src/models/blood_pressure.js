@@ -9,9 +9,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   BloodPressure.init({
-     sys: DataTypes.DOUBLE,
-    dia: DataTypes.DOUBLE,          
-    pulse: DataTypes.DOUBLE,
+    SystolicPressure: DataTypes.DOUBLE,
+    DiastolicPressure: DataTypes.DOUBLE,          
+    PulsePressure: DataTypes.DOUBLE,
+    HeartRate: DataTypes.DOUBLE,          
+    BodyTemperature: DataTypes.DOUBLE,
+    Disease: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     createDay: DataTypes.STRING,
   }, {

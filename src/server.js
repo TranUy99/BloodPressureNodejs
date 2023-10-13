@@ -7,6 +7,7 @@ const bloodPressureRouter = require  ("./route/bloodPressureRoute");
 const doctorRouter = require  ("./route/doctorRoute");
 const scheduleRouter = require  ("./route/scheduleRoute");
 const bookingRouter = require  ("./route/bookingRoute");
+const diseaseRouter = require("./route/disease")
 require('dotenv').config();
 
 let app = express();
@@ -23,6 +24,7 @@ bloodPressureRouter(app);
 doctorRouter(app);
 scheduleRouter(app);
 bookingRouter(app);
+diseaseRouter(app);
 
 connectDB();
 let port = process.env.PORT || 8080;

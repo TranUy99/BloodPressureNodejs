@@ -1,34 +1,64 @@
 const bloodPressureService = require('../services/bloodPressureService');
-
+const { spawn } = require('child_process');
 const userController = require('./userController');
-//create BloodPressure
-let createBloodPressure = async (req, res) => {
-     let userId = req.params.id;
-     let token = req.decoded.userId;
-     let { sys, dia, pulse ,createDay} = req.body;
-   
-     if (!sys || !dia || !pulse) {
-       return res.status(500).json({
-         errCode: 1,
-         message: 'Missing inputs parameter!'
-       });
-     }
-   
-     try {
-       let createBlood = await bloodPressureService.createBloodPressure(userId, token, sys, dia, pulse,createDay);
-       return res.status(200).json({
-         errCode: createBlood.errCode,
-         message: createBlood.errMessage,
-         bloodPressure: createBlood.bloodPressure
-       });
-     } catch (error) {
-       return res.status(500).json({
-         errCode: -1,
-         message: 'An error occurred while registering user!'
-       });
-     }
-};
 
+
+
+//predict
+const createBloodPressure = async (req, res) => {
+  const userId = req.params.id;
+  const token = req.decoded.userId;
+  const {
+    SystolicPressure,
+    DiastolicPressure,
+    PulsePressure,
+    HeartRate,
+    BodyTemperature,
+    createDay
+  } = req.body;
+
+  if (!SystolicPressure || !DiastolicPressure || !PulsePressure || !HeartRate || !BodyTemperature) {
+    return res.status(400).json({
+      errCode: 1,
+      message: 'Missing input parameters!'
+    });
+  }
+
+  try {
+    const childPython = spawn('python', ['loadXgboot.py', SystolicPressure, DiastolicPressure, PulsePressure, HeartRate, BodyTemperature]);
+
+    childPython.stdout.on('data', async (data) => {
+      const Disease = parseFloat(data.toString('utf8').trim()); // Converts the string to a floating-point number
+      try {
+        const createBlood = await bloodPressureService.createBloodPressure(userId, token, SystolicPressure, DiastolicPressure, PulsePressure, HeartRate, BodyTemperature, Disease, createDay);
+        return res.status(200).json({
+          errCode: createBlood.errCode,
+          message: createBlood.errMessage,
+          bloodPressure: createBlood.bloodPressure
+        });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+          errCode: -1,
+          message: 'An error occurred while registering blood pressure!'
+        });
+      }
+    });
+
+    childPython.stderr.on('data', (data) => {
+      const pythonError = data.toString('utf8');
+      console.error('Python stderr:', pythonError);
+      return res.status(500).json({
+        error: 'Python script execution error'
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: 'Python script execution error'
+    });
+  }
+};
 //get BloodPressure By UserId
 let getBloodPressureByUserId = async (req, res) => {
   let userId = req.params.id;
@@ -107,11 +137,17 @@ let getBloodPressureByUserIdReverse = async (req, res) => {
         return userController.excludeFields(item, excludedFields);
       });
 
-      const newResult = filteredBloodPressure.map(({ id, sys, dia, pulse }) => ({
+      const newResult = filteredBloodPressure.map(({ id, SystolicPressure, DiastolicPressure, PulsePressure,
+        HeartRate,BodyTemperature,Disease,createDay
+      }) => ({
         id,
-        sys,
-        dia,
-        pulse
+        SystolicPressure,
+        DiastolicPressure,
+        PulsePressure,
+        HeartRate,
+        BodyTemperature,
+        Disease,
+        createDay
       })).reverse();
 
       const totalPages = Math.ceil(newResult.length / limit);

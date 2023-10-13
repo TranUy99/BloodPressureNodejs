@@ -4,19 +4,38 @@ const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Ho_Chi_Minh'); // Đặt múi giờ mặc định là múi giờ của bạn
 
 // Chuyển đổi ngày và giờ thành múi giờ mong muốn
-
-let createBloodPressure = async (userId, token, sys, dia, pulse,createDay) => {
+const diseaseMapping = {
+  0: 'high stage 2 hypertension with high fever ',
+  1: 'high stage 2 hypertension with mild fever ',
+  2: 'high stage 2 hypertension',
+  3: 'high stage 1 hypertension with high fever ',
+  4: 'high stage 1 hypertension with mild fever ',
+  5: 'high stage 1 hypertension',
+  6: 'pre hypertension with high fever' ,
+  7: 'pre hypertension with mild fever ',
+  8: 'pre hypertension',
+  9: 'normal with high fever ',
+  10: 'normal with mild fever ',
+  11: 'normal',
+  12: 'low pressure with high fever',
+  13: 'low pressure with mild fever ',
+  14: 'low pressure',
+};
+let createBloodPressure = async (userId, token, SystolicPressure, DiastolicPressure, PulsePressure,HeartRate,BodyTemperature,Disease,createDay) => {
   
      try {
        if (userId != token) {
          return { success: 0 };
        } else {
          let newBlood = await db.BloodPressure.create({
-           sys,
-           dia,
-           pulse,
-           userId,
-           createDay,
+          SystolicPressure,
+          DiastolicPressure,
+          PulsePressure,
+          HeartRate,
+          BodyTemperature,
+          Disease: diseaseMapping[Disease] ,
+          userId,
+          createDay,
          });
    
          return {

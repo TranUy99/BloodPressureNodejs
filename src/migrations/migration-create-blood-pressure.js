@@ -9,14 +9,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sys: {
+      SystolicPressure: {
         type: Sequelize.DOUBLE
       },
-      dia: {
+      DiastolicPressure: {
         type: Sequelize.DOUBLE
       },
-      pulse: {
+      PulsePressure: {
         type: Sequelize.DOUBLE
+      },
+      HeartRate: {
+        type: Sequelize.DOUBLE
+      },
+      BodyTemperature: {
+        type: Sequelize.DOUBLE
+      },
+      Disease: {
+        type: Sequelize.STRING
       },
       createDay:{
         type: Sequelize.STRING
