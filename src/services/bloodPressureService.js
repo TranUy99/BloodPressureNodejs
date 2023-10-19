@@ -87,12 +87,12 @@ let createBloodPressure = async (userId, token, SystolicPressure, DiastolicPress
         return { errCode: 404, message: "Blood not found." };
       }
   
-      let schedule = await db.BloodPressure.findAll({
+      let bloodPressure = await db.BloodPressure.findOne({
         where: { id: bloodId},
         raw: true,
       });
   
-      return { errCode: 0, message: "OK", schedule: schedule };
+      return { errCode: 0, message: "OK", bloodPressure: bloodPressure };
     } catch (e) {
       throw e;
     }

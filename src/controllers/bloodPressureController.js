@@ -192,18 +192,14 @@ let getBloodById = async (req,res) => {
 
     let result = await bloodPressureService.getBloodById(bloodId,);
     if (result.errCode == 0) {
-      const excludedFields = ['createdAt', 'updatedAt',];
-    
-      const filteredSchedule = result.schedule.map(item => {
-        return userController.excludeFields(item, excludedFields);
-      });
-
-      return res.status(200).json({
+     
+      const response = {
         errCode: 0,
         message: 'OK',
-       
-        schedule: filteredSchedule,
-      });
+        bloodPressure: result.bloodPressure,
+      };
+    
+      return res.status(200).json(response);
     } else {
       return res.status(400).json({
         errCode: 400,

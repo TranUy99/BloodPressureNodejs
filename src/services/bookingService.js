@@ -10,6 +10,7 @@ let createBooking = async (userId, scheduleId, createDay) => {
        // Kiểm tra xem người dùng đã có lịch đặt trùng với scheduleId hay chưa
        const existingBooking = await db.Booking.findOne({
          where: { userId, scheduleId },
+         raw: true,
        });
    
        if (existingBooking) {
@@ -45,46 +46,59 @@ let createBooking = async (userId, scheduleId, createDay) => {
 
 
    let getBookingByUserId = async (userId, token) => {
-     try {
-       if (userId != token) {
-         return { errCode: 403, message: "Access denied. You are not authorized to view this user's data." };
-       }
-   
-       let user = await db.User.findOne({
-         where: { id: userId },
-         raw: true,
-       });
-   
-       if (!user) {
-         return { errCode: 404, message: "User not found." };
-       }
-   
-       let bookings = await db.Booking.findAll({
-         where: { userId: userId },
-         raw: true,
-       });
-   
-       // Lặp qua từng đặt lịch để lấy thông tin chi tiết từ bảng Schedule
-       for (const booking of bookings) {
-         const scheduleId = booking.scheduleId;
-   
-         // Thực hiện truy vấn để lấy thông tin lịch từ bảng Schedule
-         const schedule = await db.Schedule.findOne({
-           where: { id: scheduleId },
-           raw: true,
-         });
-   
-         if (schedule) {
-           // Thêm thông tin lịch vào đối tượng đặt lịch
-           booking.schedule = schedule;
-         }
-       }
-   
-       return { errCode: 0, message: "OK", bookings: bookings };
-     } catch (e) {
-       throw e;
-     }
-   };
+    try {
+      if (userId != token) {
+        return { errCode: 403, message: "Access denied. You are not authorized to view this user's data." };
+      }
+  
+      let user = await db.User.findOne({
+        where: { id: userId },
+        raw: true,
+      });
+  
+      if (!user) {
+        return { errCode: 404, message: "User not found." };
+      }
+  
+      let bookings = await db.Booking.findAll({
+        where: { userId: userId },
+        raw: true,
+      });
+  
+      // Lặp qua từng đặt lịch để lấy thông tin chi tiết từ bảng Schedule
+      for (const booking of bookings) {
+        const scheduleId = booking.scheduleId;
+  
+        // Thực hiện truy vấn để lấy thông tin lịch từ bảng Schedule
+        const schedule = await db.Schedule.findOne({
+          where: { id: scheduleId },
+          raw: true,
+        });
+  
+        if (schedule) {
+          // Thêm thông tin lịch vào đối tượng đặt lịch
+          booking.schedule = schedule;
+  
+          // Lấy thông tin của bác sĩ (doctor) từ bảng Doctor dựa trên doctorId
+          const doctorId = schedule.doctorId;
+          const doctor = await db.Doctor.findOne({
+            where: { id: doctorId },
+            raw: true,
+          });
+  
+          if (doctor) {
+            // Thêm thông tin bác sĩ vào đối tượng lịch
+            schedule.doctor = doctor;
+          }
+        }
+      }
+  
+      return { errCode: 0, message: "OK", bookings: bookings };
+    } catch (e) {
+      throw e;
+    }
+  };
+  
    
    
 module.exports ={
